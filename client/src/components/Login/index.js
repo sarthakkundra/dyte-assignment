@@ -9,7 +9,7 @@ const Index = () => {
     const { authenticate } = UrlContext;
 
     const onSuccess = (res) => {
-        authenticate(res.profileObj.googleId)
+        authenticate(res.profileObj.googleId, "Sarthak")
     }
     const onFailiure = () => {
         console.log("Login failed")

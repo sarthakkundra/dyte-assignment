@@ -1,8 +1,9 @@
 import { useReducer } from 'react'; 
 import URLContext from './URLContext';
 import URLReducer from './URLReducer';
+import axios from 'axios';
 
-import { AUTHENTICATE, DEAUTHENTICATE } from './types';
+import { AUTHENTICATE, DEAUTHENTICATE, GET_ALL_URLS } from './types';
 const URLState = (props) => {
 
     const initialState = {
@@ -13,7 +14,8 @@ const URLState = (props) => {
 
     const [state, dispatch] = useReducer(URLReducer, initialState);
 
-    const authenticate = (id) => {
+    const authenticate = async (id, name) => {
+        await axios.post('/authenticate', {id, name})
         dispatch({
             type: AUTHENTICATE,
             payload: id
@@ -25,13 +27,36 @@ const URLState = (props) => {
             type: DEAUTHENTICATE
         })
     }
+
+    const createUrl = async (url, id) => {
+        await axios.post('/shorten', {fullURL: url, id})
+    }
+
+    const updateUrl = () => {}
+
+    const deleteUrl = () => {}
+
+    const getAllUrls = async (id) => {
+        console.log(id);
+        const urls = await axios.get(`/myUrls/${id}`);
+        console.log(urls);
+        dispatch({
+            type: GET_ALL_URLS,
+            payload: urls.data
+        })
+    }
+    
     return(
         <URLContext.Provider value={{
             userId: state.userId,
             isAuthenticated: state.isAuthenticated,
             urls: state.urls,
             authenticate,
-            deAuthenticate
+            deAuthenticate,
+            createUrl,
+            updateUrl,
+            deleteUrl,
+            getAllUrls
         }}
         >
         {props.children}

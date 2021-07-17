@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Input, Button, Center } from "@chakra-ui/react";
-
+import URLContext from '../../context/URLContext';
 const Index = () => {
 
     const [url, setUrl] = useState('')
+    const UrlContext = useContext(URLContext);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(url);
+        UrlContext.createUrl(url, UrlContext.userId);
     }
     return (
         <div>

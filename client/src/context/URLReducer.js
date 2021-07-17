@@ -1,4 +1,4 @@
-import { AUTHENTICATE, DEAUTHENTICATE } from './types';
+import { AUTHENTICATE, DEAUTHENTICATE, GET_ALL_URLS } from './types';
 
 const reducer = (state, action) => {
 
@@ -11,6 +11,11 @@ const reducer = (state, action) => {
                 isAuthenticated: true
             }
         
+        case GET_ALL_URLS:
+            return{
+                ...state,
+                urls: action.payload
+            }
         case DEAUTHENTICATE:
             return{
                 ...state,

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { nanoid } = require("nanoid");
+const UserModel = require("./userSchema");
 
 const shortURLSchema = new mongoose.Schema({
     fullURL: {
@@ -10,6 +11,10 @@ const shortURLSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: nanoid
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UserModel'
     }
 })
 
