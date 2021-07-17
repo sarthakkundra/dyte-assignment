@@ -1,8 +1,8 @@
 const express = require("express");
 const connectDB = require('./config/db');
-const shortURL = require("./models/shortURL");
 const ShortUrl = require("./models/shortURL");
 const UserModel = require('./models/userSchema')
+const AnalyticsModel = require('./models/analyticsSchema');
 
 const app = express();
 connectDB();
@@ -42,20 +42,31 @@ app.post('/shorten', async (req, res) => {
 })
 
 app.get('/myUrls/:id', async (req, res) => {
-console.log("Hi")
-console.log(req.params.id)
+
     try {
         const user = await UserModel.findOne({ id: req.params.id })
 
         if(!user){
             throw new Error("No user");
         }
-        const urls = await ShortUrl.find({ user })
-        res.send(urls);
+        let urls = await ShortUrl.find({ user })
+
+        let rv = []
+        for(let url of urls){
+            console.log(url)
+            url.analytics = await AnalyticsModel.countDocuments({ shortURL: url})
+            rv.push(url)
+            console.log(url.analytics)
+        }
+        // urls.forEach(async (url, idx) => {
+        //     url.analytics = await AnalyticsModel.countDocuments({ shortURL: url})
+        // })
+        res.send(rv);
     } catch (e) {
         console.error(e);
     }
 })
+
 
 // app.get('/:shortUrl', async (req, res) => {
 //     try {
