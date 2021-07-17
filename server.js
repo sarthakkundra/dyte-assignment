@@ -68,13 +68,15 @@ app.get('/myUrls/:id', async (req, res) => {
 })
 
 
-// app.get('/:shortUrl', async (req, res) => {
-//     try {
-//         const rv = await shortURL.findOne({ shortURL: req.params.ShortUrl });        
-//     } catch (error) {
-//         console.error(error)
-//     }
+app.get('/:shortUrl', async (req, res) => {
+
+    let rv = null;
+    try {
+         rv = await ShortUrl.findOne({ shortURL: req.params.shortUrl });        
+    } catch (error) {
+        console.error(error)
+    }
       
-//     if(rv === null) res.setStatus(404);
-//     res.redirect(rv.fullURL);
-// })
+    if(rv === null) res.setStatus(404);
+    res.redirect(rv.fullURL);
+})

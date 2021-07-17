@@ -13,7 +13,7 @@ const Profile = () => {
 
     return (
         <div style={inputTable}>
-        <Container maxW='container.xl'>
+        <Container maxW='container.lg'>
             <Input />
             <URLs />
             </Container>

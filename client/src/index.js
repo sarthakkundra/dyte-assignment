@@ -5,12 +5,12 @@ import { ChakraProvider } from "@chakra-ui/react"
 import URLState from './context/URLState';
 
 ReactDOM.render(
-  <React.StrictMode resetCSS> 
+  <React.StrictMode> 
+    <URLState>
   <ChakraProvider>
-  <URLState>
     <App />
-    </URLState>
     </ChakraProvider>
+    </URLState>
   </React.StrictMode>,
   document.getElementById('root')
 );
