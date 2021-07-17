@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const connectDB = require('./config/db');
 const ShortUrl = require("./models/shortURL");
 const UserModel = require('./models/userSchema')
@@ -10,6 +11,7 @@ app.listen(process.env.PORT || 3001);
 
 app.use(require('body-parser').urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.send("Homepage");
@@ -78,5 +80,6 @@ app.get('/:shortUrl', async (req, res) => {
     }
       
     if(rv === null) res.setStatus(404);
-    res.redirect(rv.fullURL);
+    res.send(rv.fullURL);
+
 })

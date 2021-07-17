@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import URLContext from '../../context/URLContext';
+import history from '../../utils/history';
 import axios from 'axios';
 import {
 	Table,
@@ -26,7 +27,8 @@ const Index = () => {
 
 	const handleClick = async (e) => {
 		console.log(e.target.innerText)
-		await axios.get(`/${e.target.innerText}`)
+		const redirect = await axios.get(`/${e.target.innerText}`)
+		window.location.replace(redirect.data)
 	}
 	return (
 		<div>

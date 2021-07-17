@@ -4,13 +4,14 @@ import Profile from './components/Pages/Profile';
 import Navbar from './components/Navbar'
 import URLContext from "./context/URLContext";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import history from './utils/history';
 import { Container } from "@chakra-ui/react";
 function App() {
 	const UrlContext = useContext(URLContext);
 	const { isAuthenticated } = UrlContext;
 	return (
     <>
-		<Router>
+		<Router history={history}>
     <Navbar />
 			<Switch>
       <Route path='/profile'>
