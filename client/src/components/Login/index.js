@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { GoogleLogin } from 'react-google-login';
+import URLContext from '../../context/URLContext';
 
 const clientId = `213811319886-5rosiakatcgi6smukr7v9cte64t6upgg.apps.googleusercontent.com`
-const index = () => {
+const Index = () => {
+
+    const UrlContext = useContext(URLContext);
+    const { authenticate } = UrlContext;
 
     const onSuccess = (res) => {
-        console.log(res.profileObj)
+        authenticate(res.profileObj.googleId)
     }
     const onFailiure = () => {
         console.log("Login failed")
@@ -24,4 +28,4 @@ const index = () => {
     )
 }
 
-export default index
+export default Index

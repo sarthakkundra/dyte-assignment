@@ -1,10 +1,13 @@
-import React, { cloneElement } from "react";
+import React, { useContext } from "react";
 import { GoogleLogout } from "react-google-login";
-
+import URLContext from '../../context/URLContext';
 const clientId = `213811319886-5rosiakatcgi6smukr7v9cte64t6upgg.apps.googleusercontent.com`;
-const index = () => {
+
+const Index = () => {
+	const UrlContext = useContext(URLContext);
+
 	const onSuccess = () => {
-		console.log("Logged out!");
+		UrlContext.deAuthenticate();
 	};
 	return (
 		<div>
@@ -16,4 +19,4 @@ const index = () => {
 	);
 };
 
-export default index;
+export default Index;

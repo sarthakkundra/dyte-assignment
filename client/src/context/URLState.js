@@ -2,7 +2,7 @@ import { useReducer } from 'react';
 import URLContext from './URLContext';
 import URLReducer from './URLReducer';
 
-import { AUTHENTICATE } from './types';
+import { AUTHENTICATE, DEAUTHENTICATE } from './types';
 const URLState = (props) => {
 
     const initialState = {
@@ -11,7 +11,7 @@ const URLState = (props) => {
         urls: []
     }
 
-    const [state, dispatch] = useReducer(URLReducer);
+    const [state, dispatch] = useReducer(URLReducer, initialState);
 
     const authenticate = (id) => {
         dispatch({
@@ -19,12 +19,19 @@ const URLState = (props) => {
             payload: id
         })
     }
+
+    const deAuthenticate = () => {
+        dispatch({
+            type: DEAUTHENTICATE
+        })
+    }
     return(
         <URLContext.Provider value={{
             userId: state.userId,
             isAuthenticated: state.isAuthenticated,
             urls: state.urls,
-            authenticate
+            authenticate,
+            deAuthenticate
         }}
         >
         {props.children}

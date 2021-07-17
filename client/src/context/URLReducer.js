@@ -1,4 +1,4 @@
-import { AUTHENTICATE } from './types';
+import { AUTHENTICATE, DEAUTHENTICATE } from './types';
 
 const reducer = (state, action) => {
 
@@ -9,6 +9,13 @@ const reducer = (state, action) => {
                 ...state,
                 userId: action.payload,
                 isAuthenticated: true
+            }
+        
+        case DEAUTHENTICATE:
+            return{
+                ...state,
+                userId: null,
+                isAuthenticated: false
             }
         default:
             return state;
