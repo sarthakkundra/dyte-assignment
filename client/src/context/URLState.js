@@ -3,7 +3,7 @@ import URLContext from './URLContext';
 import URLReducer from './URLReducer';
 import axios from 'axios';
 
-import { AUTHENTICATE, DEAUTHENTICATE, GET_ALL_URLS } from './types';
+import { AUTHENTICATE, DEAUTHENTICATE, GET_ALL_URLS, DELETE_URL } from './types';
 const URLState = (props) => {
 
     const initialState = {
@@ -34,7 +34,13 @@ const URLState = (props) => {
 
     const updateUrl = () => {}
 
-    const deleteUrl = () => {}
+    const deleteUrl = async (id) => {
+        await axios.delete(`/myUrls/${id}`)
+        dispatch({
+            type: DELETE_URL,
+            payload: id
+        })
+    }
 
     const getAllUrls = async (id) => {
         console.log(id);

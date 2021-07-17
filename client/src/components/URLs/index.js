@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from "react";
-import URLContext from '../../context/URLContext';
-import history from '../../utils/history';
-import axios from 'axios';
+import URLContext from "../../context/URLContext";
+import axios from "axios";
 import {
 	Table,
 	Thead,
@@ -11,25 +10,35 @@ import {
 	Td,
 	TableCaption,
 	Text,
-    HStack,
-    Box,
-    IconButton
+	HStack,
+	Box,
+	IconButton,
+	useToast,
 } from "@chakra-ui/react";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons"
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 const Index = () => {
-
 	const UrlContext = useContext(URLContext);
-	const { urls, getAllUrls } = UrlContext;
+	const { urls, getAllUrls, deleteUrl } = UrlContext;
 
 	useEffect(() => {
 		getAllUrls();
-	}, [urls])
+	}, [urls]);
 
 	const handleClick = async (e) => {
-		console.log(e.target.innerText)
-		const redirect = await axios.get(`/${e.target.innerText}`)
-		window.location.replace(redirect.data)
-	}
+		console.log(e.target.innerText);
+		const redirect = await axios.get(`/${e.target.innerText}`);
+		window.location.replace(redirect.data);
+	};
+
+	const getUnique = (arr) => {
+		let uniqueSet = new Set();
+
+		arr.forEach((obj) => uniqueSet.add(obj.ipAddress))
+
+		return uniqueSet.size
+	};
+
+	const toast = useToast();
 	return (
 		<div>
 			<Table variant='simple'>
@@ -38,40 +47,42 @@ const Index = () => {
 					<Tr>
 						<Th>Original URL</Th>
 						<Th>Shortened </Th>
-						<Th isNumeric>Visitors</Th>
+						<Th isNumeric>Total hits</Th>
+						<Th isNumeric>Unique hits</Th>
 					</Tr>
 				</Thead>
 				<Tbody>
-				{urls.map((url) =>
-					<Tr>
-						<Td><Text isTruncated>{url.fullURL}</Text></Td>
-						<HStack>
-							<Box onClick={handleClick}>
-								<Text>{url.shortURL}</Text>
-							</Box>
-							<Box>
-							<IconButton icon={<DeleteIcon />}></IconButton>
-                            <IconButton icon={<EditIcon />}></IconButton>
-							</Box>
-						</HStack>
-						<Td isNumeric>25</Td>
-					</Tr>
-				)}
-					{/* <Tr>
-						<Td>www.google.com</Td>
-						<Td>
-                        <HStack>
-                        <Box>
-                        https://goo.gl
-                        </Box>
-                        <Box>
-                            <IconButton icon={<DeleteIcon />}></IconButton>
-                            <IconButton icon={<EditIcon />}></IconButton>
-                        </Box>
-                        </HStack>
-                        </Td>
-						<Td isNumeric>25</Td>
-					</Tr> */}
+					{urls.map((url) => (
+						<Tr>
+							<Td>
+								<Text isTruncated>{url.fullURL}</Text>
+							</Td>
+							<HStack>
+								<Box onClick={handleClick}>
+									<Text>{url.shortURL}</Text>
+								</Box>
+								<Box>
+									<IconButton
+										onClick={() => deleteUrl(url.shortURL)}
+										icon={<DeleteIcon />}></IconButton>
+									<IconButton
+										onClick={() => {
+											deleteUrl(url.shortURL);
+											toast({
+												title: "Updation in progress",
+												description: "Enter new URL in input box",
+												status: "warning",
+												duration: 5000,
+												isClosable: true,
+											});
+										}}
+										icon={<EditIcon />}></IconButton>
+								</Box>
+							</HStack>
+							<Td isNumeric>{url.unique.length}</Td>
+							<Td isNumeric>{getUnique(url.unique)}</Td>
+						</Tr>
+					))}
 				</Tbody>
 			</Table>
 		</div>

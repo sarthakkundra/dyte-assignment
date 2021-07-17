@@ -18,7 +18,8 @@ app.get('/', (req, res) => {
 })
 
     app.post('/authenticate', async (req, res) => {
-        console.log(`BE ${req.body}`);
+        console.log(req.body);
+        console.log("authenticate")
         try {   
             const user = await UserModel.findOne({ id : req.body.id });
             if(!user){
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
     })
 
 app.post('/shorten', async (req, res) => {
+    console.log("shorten")
     console.log(req.body);
     try {
         const user = await UserModel.findOne({ id: req.body.id});
@@ -43,9 +45,19 @@ app.post('/shorten', async (req, res) => {
     }
 })
 
+app.delete('/myUrls/:shortUrl', async (req, res) => {
+    try {
+        await ShortUrl.findOneAndDelete({ shortURL: req.params.shortUrl})
+        res.status(200);
+    } catch (e) {
+        console.error(e)
+    }
+})
+
 app.get('/myUrls/:id', async (req, res) => {
 
     try {
+        console.log(req.params.id)
         const user = await UserModel.findOne({ id: req.params.id })
 
         if(!user){
@@ -54,12 +66,20 @@ app.get('/myUrls/:id', async (req, res) => {
         let urls = await ShortUrl.find({ user })
 
         let rv = []
+        let unique, totalViews
         for(let url of urls){
             console.log(url)
-            url.analytics = await AnalyticsModel.countDocuments({ shortURL: url})
-            rv.push(url)
+            totalViews = await AnalyticsModel.countDocuments({ shortURL: url})
+            unique = await AnalyticsModel.find({ shortURL : url }).select({ ipAddress: 1})
+            console.log("unique", unique)
+            console.log("Total views", totalViews)
+            let mutableUrlRes = JSON.parse(JSON.stringify(url));
+            mutableUrlRes.unique = unique
+            rv.push(mutableUrlRes)
             console.log(url.analytics)
         }
+
+        console.log("unique", unique)
         // urls.forEach(async (url, idx) => {
         //     url.analytics = await AnalyticsModel.countDocuments({ shortURL: url})
         // })
@@ -71,15 +91,18 @@ app.get('/myUrls/:id', async (req, res) => {
 
 
 app.get('/:shortUrl', async (req, res) => {
-
+    
     let rv = null;
     try {
-         rv = await ShortUrl.findOne({ shortURL: req.params.shortUrl });        
+        console.log(req.params.shortUrl)
+        rv = await ShortUrl.findOne({ shortURL: req.params.shortUrl }); 
+        console.log(rv);
+        await AnalyticsModel.create({ shortURL: rv._id, ipAddress: req.ip})       
     } catch (error) {
         console.error(error)
     }
       
-    if(rv === null) res.setStatus(404);
+    if(rv === null) res.sendStatus(404);
     res.send(rv.fullURL);
 
 })

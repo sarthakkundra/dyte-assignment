@@ -7,7 +7,7 @@ const analyticsSchema = new mongoose.Schema({
     },
     ipAddress: {
         type: String,
-        required: true
+        required: true,
     }
 })
 

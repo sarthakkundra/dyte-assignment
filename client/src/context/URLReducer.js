@@ -1,4 +1,4 @@
-import { AUTHENTICATE, DEAUTHENTICATE, GET_ALL_URLS } from './types';
+import { AUTHENTICATE, DEAUTHENTICATE, DELETE_URL, GET_ALL_URLS } from './types';
 
 const reducer = (state, action) => {
 
@@ -11,6 +11,11 @@ const reducer = (state, action) => {
                 isAuthenticated: true
             }
         
+        case DELETE_URL:
+            return{
+                ...state,
+                urls: state.urls.filter((url) => url.shortURL !== action.payload)
+            }
         case GET_ALL_URLS:
             return{
                 ...state,
